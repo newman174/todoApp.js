@@ -1,33 +1,50 @@
 <!doctype html>
 <html lang="en-US">
-  <head>
-    <title>Project Tests</title>
-    <!-- <script type="module" src="main.js"></script> -->
-    <script src="main.js"></script>
-    <style>
-      ol {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-      }
 
-      li {
-        padding: 7px 12px;
+<head>
+  <title>Project Tests</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "uuid": "https://raw.githubusercontent.com/uuidjs/uuid/main/src/v4.js"
       }
-      li.pass {
-        color: #339a33;
-        border: 2px solid #339a33;
-        background: #99cc99;
-      }
-      li.fail {
-        color: #b00b00;
-        border: 2px solid #b00b00;
-        background: #f0acac;
-      }
-    </style>
-  </head>
-  <body>
-    <ol></ol>
-    <script src="tests.js"></script>
-  </body>
+    }
+  </script>
+  <!-- <script type="module" src="main.js"> -->
+  <!-- <script src="main.js"></script> -->
+  <!-- <script type="module" src="https://github.com/uuidjs/uuid/blob/main/src/v4.js"></script> -->
+  <!-- <script type="module" src="./todoApp.js"></script> -->
+  <script type="module" src="./todoApp_v2.js"></script>
+
+  <style>
+    ol {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    li {
+      padding: 7px 12px;
+    }
+
+    li.pass {
+      color: #339a33;
+      border: 2px solid #339a33;
+      background: #99cc99;
+    }
+
+    li.fail {
+      color: #b00b00;
+      border: 2px solid #b00b00;
+      background: #f0acac;
+    }
+
+  </style>
+</head>
+
+<body>
+  <ol></ol>
+  <script src="tests.js"></script>
+</body>
+
 </html>
