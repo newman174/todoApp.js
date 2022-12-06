@@ -1,40 +1,44 @@
-'use strict';
+// tests.js
 
 // === Setup ==================================================================
-var $ol = document.querySelector("ol");
+const $ol = document.querySelector('ol');
 
-const { Todo, todoList, todoManager, todoSet } = window.todoApp;
+const {
+  Todo,
+  todoList,
+  todoManager,
+  todoSet,
+} = window.todoApp;
 const todoData1 = todoSet[0];
 const todoData2 = todoSet[1];
 
 // === Helper Functions =======================================================
 const outputResult = function (message) {
-  var $li = document.createElement("li");
+  const $li = document.createElement('li');
   $li.innerText = message;
   $ol.appendChild($li);
   return $li;
-}
+};
 
 const test = function (message, assertion) {
-  var $msg = outputResult(message),
-    passed = false;
+  const $msg = outputResult(message);
+  let passed = false;
 
   try {
     passed = assertion();
-  }
-  catch (e) {
+  } catch (e) {
     passed = false;
     console.error(e);
   }
-  $msg.setAttribute("class", passed ? "pass" : "fail");
-}
+  $msg.setAttribute('class', passed ? 'pass' : 'fail');
+};
 
-const heading = function (heading) {
-  var $h2 = document.createElement("h2");
-  $h2.innerText = heading;
+const heading = function (text) {
+  var $h2 = document.createElement('h2');
+  $h2.innerText = text;
   $ol.appendChild($h2);
   return $h2;
-}
+};
 
 const assertSimilar = function (obj1, obj2) {
   const comparable = function (obj) {
@@ -42,21 +46,17 @@ const assertSimilar = function (obj1, obj2) {
       obj = Object.entries(obj);
     }
     return JSON.stringify(obj.sort());
-  }
+  };
 
   return comparable(obj1) === comparable(obj2);
-}
+};
 
 // === Helper Tests ===========================================================
 heading('Helper Tests');
 
-test('test formats properly on pass', function () {
-  return true;
-});
+test('test formats properly on pass', () => true);
 
-test('test formats properly on fail (*should display as red/fail*)', function () {
-  return false;
-});
+test('test formats properly on fail (*should display as red/fail*)', () => false);
 
 test('assertSimilar works on arrays', function () {
   return (assertSimilar(['a', 'b'], ['b', 'a']) === true) &&
@@ -64,15 +64,14 @@ test('assertSimilar works on arrays', function () {
 });
 
 test('assertSimilar works on non-array objects', function () {
-  return (assertSimilar({foo: 'bar', baz: 'qux'}, {baz: 'qux', foo: 'bar'}) === true) &&
-         (assertSimilar({foo: 'bar', baz: 'qux'}, {baz: 'meow', foo: 'bar'}) === false);
+  return (assertSimilar({ foo: 'bar', baz: 'qux' }, { baz: 'qux', foo: 'bar' }) === true) &&
+         (assertSimilar({ foo: 'bar', baz: 'qux' }, { baz: 'meow', foo: 'bar' }) === false);
 });
 
 // === Todo Tests =============================================================
 heading('Todo Tests');
 
-test("Todo constructor is defined", function () {
-  console.log(typeof Todo)
+test('Todo constructor is defined', function () {
   return typeof Todo === 'function';
 });
 
@@ -83,15 +82,15 @@ test("todo objects have unique id's", function () {
   return myTodo1.id && myTodo2.id && (myTodo1.id !== myTodo2.id);
 });
 
-test("A todo object only has the desired properties", function () {
+test('A todo object only has the desired properties', function () {
   const myTodo = new Todo(todoData1);
   const expected = [ 'id', 'title', 'completed', 'month', 'year', 'description' ].sort();
   const actual = Object.keys(myTodo).sort();
 
-  return JSON.stringify(expected) === JSON.stringify(actual);
+  return assertSimilar(expected, actual);
 });
 
-test("todo objects can delegate to a shared isWithinMonthYear method", function () {
+test('todo objects can delegate to a shared isWithinMonthYear method', function () {
   const myTodo1 = new Todo(todoData1);
   const myTodo2 = new Todo(todoData2);
   return (typeof myTodo1.isWithinMonthYear === 'function') &&
@@ -99,7 +98,7 @@ test("todo objects can delegate to a shared isWithinMonthYear method", function 
          (myTodo1.isWithinMonthYear === myTodo2.isWithinMonthYear);
 });
 
-test("isWithinMonthYear method functions as expected", function () {
+test('Todo.prototype.isWithinMonthYear method functions as expected', function () {
   const myTodoData = {
     title: 'Buy cat food',
     month: '2',
@@ -117,319 +116,157 @@ test("isWithinMonthYear method functions as expected", function () {
 // === todoList Tests =========================================================
 heading('todoList Tests');
 
-test("todoList object is defined", function () {
+test('todoList object is defined', function () {
   return typeof todoList === 'object';
 });
 
-test("todoList maintains a collection of todo objects", function () {
+test('todoList maintains a collection of todo objects', function () {
   return Array.isArray(todoList.filter());
 });
 
-test("todoList can add a todo to the collection", function () {
-  const myTodo = new Todo(myTodoData);
+test('todoList can add a todo to the collection', function () {
+  const newTodoId = todoList.add(todoData1);
+  const items = todoList.all();
 
-})
+  const result = (items.length === 1) &&
+                 (items[0].id === newTodoId) &&
+                 (items[0].description === todoData1.description);
+
+  todoList.delete(newTodoId);
+
+  return result;
+});
+
+test('todoList can delete a todo from the collection', function () {
+  const newTodoId = todoList.add(todoData1);
+  todoList.delete(newTodoId);
+
+  const items = todoList.all;
+
+  return (items.length === 0);
+
+  return result;
+});
+
+test('todoList updates the existing properties of a specific todo object', function () {
+  const targetId = todoList.add(todoData1);
+  const newData = { title: 'New Title' };
+  todoList.update(targetId, newData);
+
+  const result = (todoList.all()[0].title === newData.title) && (todoList.all()[0].description === todoData1.description);
+
+  todoList.delete(targetId);
+  return result;
+});
+
+test('todoList returns a specified todo based on its id', function () {
+  const targetId = todoList.add(todoData1);
+  const otherId = todoList.add(todoData2);
+
+  const searchResult = todoList.findById(targetId);
+
+  const testResult = searchResult.description === todoData1.description;
+  todoList.delete(targetId);
+  todoList.delete(otherId);
+
+  return testResult;
+});
+
 
 // === todoManager Tests ======================================================
 heading('todoManager Tests');
 
-test("todoManager object is defined", function () {
+test('todoManager object is defined', function () {
   return typeof todoManager === 'object';
 });
 
-test("todoManager can return all todo objects", function () {
-
+test('todoManager returns an array', function () {
+  return typeof todoManager === 'object';
 });
 
-test("todoManager can return all completed todo objects", function () {
-
+test('todoManager returned array is a copy of the collection', function () {
+  return (todoManager.all() !== todoManager.all());
 });
 
-test("todoManager can return all todo objects within a given month-year combination", function () {
+test('todoManager returned array is a deep copy of the collection', function () {
+  const targetId = todoList.add(todoData1);
+  const snapshot = todoManager.all();
+  snapshot[0].title = 'New Title';
 
+  const testResult = (todoList.findById(targetId).title === todoData1.title) &&
+                     (todoList.findById(targetId).title !== snapshot[0].title);
+
+  todoList.delete(targetId);
+
+  return testResult;
 });
 
-test("todoManager can return all completed todo objects within a given month-year combination", function () {
+test('todoManager can return all todo objects', function () {
+  const newIds = todoSet.map((todoData) => {
+    return todoList.add(todoData);
+  })
 
+  const testResult = (todoManager.all().length === todoSet.length);
+
+  todoList.delete(...newIds);
+
+  return testResult;
 });
 
+test('todoManager can return all completed todo objects', function () {
+  const newIds = todoSet.map((todoData) => {
+    return todoList.add(todoData);
+  })
 
+  todoList.markCompleted(newIds[0], newIds[1]);
 
+  const testResult = (todoManager.all().length === todoSet.length) &&
+                     (todoManager.completed().length === 2) &&
+                     (todoManager.completed()[0].id === newIds[0]);
 
+  todoList.delete(...newIds);
 
+  return testResult;
+});
 
+test('todoManager can return all todo objects within a given month-year combination', function () {
+  const myTodoData = {
+    title: 'Buy cat food',
+    month: '2',
+    year: '2017',
+    description: 'Otherwise he gets hangry',
+  };
 
+  const targetId = todoList.add(myTodoData);
+  const otherId = todoList.add(todoData1);
 
-// test("_ is defined", function() {
-//   return typeof _ !== "undefined";
-// });
+  const testResult = (todoManager.itemsWithinMonthYear('2', '2017').length === 1) &&
+                     (todoManager.itemsWithinMonthYear('2', '2017')[0].id === targetId);
 
-// test("first is defined", function() {
-//   return typeof _().first === "function";
-// });
-// test("first returns first element in an array", function() {
-//   return _([4]).first() === 4;
-// });
-// (function() {
-//   var a = [];
-//   a[1] = 4;
-//   test("first does not return second element even if first is undefined", function() {
-//     return _(a).first() === undefined;
-//   });
-// })();
+  todoList.delete(targetId, otherId);
 
-// test("last is defined", function() {
-//   return typeof _().last === "function";
-// });
-// test("last returns last element in an array", function() {
-//   return _([1, 2, 3, 4]).last() === 4;
-// });
+  return testResult;
+});
 
-// test("without is defined", function() {
-//   return typeof _().without === "function";
-// });
-// test("without returns new array that does not contain the supplied value", function() {
-//   return _([1, 2, 3, 4, 5]).without(4).indexOf(4) === -1;
-// });
-// test("without removes any number of arguments", function() {
-//   var a = _([1, 2, 3, 4, 5, 6]).without(6, 4);
-//   return a.indexOf(6) === -1 && a.indexOf(4) === -1;
-// });
-// test("without removes only the specified number of arguments", function() {
-//   var a = _([1, 2, 3, 4, 5, 6]).without(6, 4);
-//   return a.length === 4;
-// });
-// test("without retains the elements that aren't remove", function() {
-//   var a = _([1, 2, 3, 4, 5, 6]).without(6, 4);
-//   return a.indexOf(1) === 0 && a.indexOf(2) === 1 && a.indexOf(3) === 2 && a.indexOf(5) === 3;
-// });
+test('todoManager can return all completed todo objects within a given month-year combination', function () {
+  const myTodoData = {
+    title: 'Buy cat food',
+    month: '2',
+    year: '2017',
+    description: 'Otherwise he gets hangry',
+  };
 
-// test("range is defined", function() {
-//   return typeof _.range === "function";
-// });
-// test("range returns an array of values starting at 0 when one argument supplied", function() {
-//   return _.range(10)[0] === 0 && _.range(10).length === 10;
-// });
-// test("range returns an array of values starting with the first value when two arguments supplied", function() {
-//   return _.range(1, 10)[0] === 1 && _.range(1, 10).length === 9;
-// });
+  const targetId = todoList.add(myTodoData);
+  const otherId = todoList.add(todoData1);
 
-// test("lastIndexOf is defined", function() {
-//   return typeof _().lastIndexOf === "function";
-// });
-// test("lastIndexOf returns last index of supplied value", function() {
-//   return _([1, 1, 1]).lastIndexOf(1) === 2 && _([1, 2, 3]).lastIndexOf(2) === 1;
-// });
+  todoList.markCompleted(targetId, otherId);
 
-// test("sample is defined", function() {
-//   return typeof _().sample === "function";
-// });
-// test("sample returns a single element when no argument supplied", function() {
-//   return _([1]).sample() === 1;
-// });
-// test("sample returns multiple, non-repetitive elements when a numeric argument supplied", function() {
-//   return _([1, 2, 3]).sample(3).length === 3;
-// });
+  const testResult = (todoManager.itemsWithinMonthYear('2', '2017').length === 1) &&
+                     (todoManager.itemsWithinMonthYear('2', '2017')[0].id === targetId);
 
-// test("findWhere is defined", function() {
-//   return typeof _().findWhere === "function";
-// });
-// (function() {
-//   var dict = [{ foo: "bar", idx: 0 }, { foo: "baz", idx: 1 }, { foo: "bar", idx: 2 }];
+  todoList.delete(targetId, otherId);
 
-//   test("findWhere returns the first object with matched properties", function() {
-//     return _(dict).findWhere({ foo: "bar" }).idx === 0;
-//   });
-// })();
-// (function() {
-//   var dict = [{ foo: "bar", quux: "q", idx: 0 }, { foo: "baz", quux: "z", idx: 1 }, { foo: "bar", quux: "z", idx: 2 }];
+  return testResult;
+});
 
-//   test("findWhere returns the first object with multiple matched properties", function() {
-//     return _(dict).findWhere({ foo: "bar", quux: "z" }).idx === 2;
-//   });
-// })();
-// (function() {
-//   var dict = [{ foo: "bar", idx: 0 }, { foo: "baz", idx: 1 }, { foo: "bar", idx: 2 }];
-
-//   test("findWhere returns undefined with no matched properties", function() {
-//     return _(dict).findWhere({ foo: "quux" }) === undefined;
-//   });
-// })();
-
-// test("where is defined", function() {
-//   return typeof _().where === "function";
-// });
-
-// (function() {
-//   var dict = [{ foo: "bar", idx: 0 }, { foo: "baz", idx: 1 }, { foo: "bar", idx: 2 }];
-
-//   test("where returns an array with one matched object", function() {
-//     return _(dict).where({ idx: 0 }).length === 1;
-//   });
-//   test("where returns an array with two matched objects", function() {
-//     return _(dict).where({ foo: "bar" }).length === 2;
-//   });
-// })();
-
-// test("pluck is defined", function() {
-//   return typeof _().pluck === "function";
-// });
-
-// test("pluck returns array of two values", function() {
-//   var coll = [{ foo: "bar" }, { foo: "baz" }],
-//       pluck = _(coll).pluck("foo");
-
-//   return pluck.length === 2;
-// });
-// test("pluck returns both values", function() {
-//   var coll = [{ foo: "bar" }, { foo: "baz" }],
-//       pluck = _(coll).pluck("foo");
-
-//   return pluck[0] === "bar" && pluck[1] === "baz";
-// });
-
-// test("keys is defined", function() {
-//   return typeof _().keys === "function";
-// });
-
-// test("keys returns an array of keys from the object", function() {
-//   var keys = _({ foo: "bar", baz: "quuz" }).keys();
-//   return keys.length === 2;
-// });
-// test("keys returns all keys that are own properties of the object", function() {
-//   var keys = _({ foo: "bar", baz: "quuz" }).keys();
-//   return keys.indexOf("foo") !== -1 && keys.indexOf("baz") !== -1;
-// });
-// test("keys does not return inherited object properties", function() {
-//   var keys = _({ foo: "bar", baz: "quuz" }).keys();
-//   return keys.indexOf("toString") === -1;
-// });
-
-// test("values is defined", function() {
-//   return typeof _().values === "function";
-// });
-
-// test("values returns an array of values from the object", function() {
-//   var values = _({ foo: "bar", baz: "quuz" }).values();
-//   return values.length === 2;
-// });
-// test("values returns all values that are own properties of the object", function() {
-//   var values = _({ foo: "bar", baz: "quuz" }).values();
-//   return values.indexOf("bar") !== -1 && values.indexOf("quuz") !== -1;
-// });
-
-// test("extend is defined", function() {
-//   return typeof _.extend === "function";
-// });
-
-// test("extend returns an extended object using new object's values", function() {
-//   var new_obj = { bar: "baz" },
-//       old_obj = { foo: "bar" },
-//       ext_obj = _.extend(old_obj, new_obj);
-//       crazy_object = _.extend({ foo: "quuz" }, new_obj, old_obj);
-//   return ext_obj.foo === "bar" && ext_obj.bar === "baz";
-// });
-// test("extend modifies the first object passed in rather than creating a new object", function() {
-//   var new_obj = { bar: "baz" },
-//       old_obj = { foo: "bar" },
-//       ext_obj = _.extend(old_obj, new_obj);
-//       crazy_object = _.extend({ foo: "quuz" }, new_obj, old_obj);
-//   return new_obj === _.extend(new_obj, {});
-// });
-// test("extend works with any number of objects", function() {
-//   var new_obj = { bar: "baz" },
-//       old_obj = { foo: "bar" },
-//       ext_obj = _.extend(old_obj, new_obj);
-//       crazy_object = _.extend({ foo: "quuz" }, new_obj, old_obj);
-//   return crazy_object.foo === "bar";
-// });
-
-// test("pick is defined", function() {
-//   return typeof _().pick === "function";
-// });
-
-// test("pick returns a new object with the passed in properties", function() {
-//   var old_obj = { foo: "bar" },
-//       new_obj = _(old_obj).pick("foo");
-
-//   return new_obj.foo === old_obj.foo && new_obj !== old_obj;
-// });
-// test("pick ignores any properties passed in that do not exist on the source object", function() {
-//   var old_obj = { foo: "bar" },
-//       new_obj = _(old_obj).pick("foo");
-
-//   return _(new_obj).pick("foo", "bar").bar === undefined;
-// });
-
-// test("omit is defined", function() {
-//   return typeof _().omit === "function";
-// });
-
-// test("omit returns a new object with any passed in properties omitted", function() {
-//   var old_obj = { foo: "bar" },
-//       new_obj = _(old_obj).omit("foo");
-
-//   return new_obj.foo === undefined;
-// });
-
-// test("omit doesn't insert properties that aren't on the original object", function() {
-//   var old_obj = { foo: "bar" },
-//       new_obj = _(old_obj).omit("foo", "foo2");
-
-//   return new_obj.hasOwnProperty('foo2') === false;
-// });
-
-// test("omit doesn't remove all the properties", function() {
-//   var old_obj = { foo: "bar", foo2: "bar2" },
-//       new_obj = _(old_obj).omit("foo");
-
-//   return new_obj.hasOwnProperty('foo') === false && new_obj.hasOwnProperty('foo2') === true;
-// });
-
-// test("has is defined", function() {
-//   return typeof _().has === "function";
-// });
-
-// test("has returns true when property exists", function() {
-//   var o = { foo: "bar" };
-
-//   return _(o).has("foo");
-// });
-// test("has returns false when property does not exist", function() {
-//   var o = { foo: "bar" };
-
-//   return !_(o).has("bar");
-// });
-// test("has returns true when hasOwnProperty is defined", function() {
-//   var o = { foo: "bar" };
-//   o.hasOwnProperty = function() { };
-
-//   return _(o).has("hasOwnProperty");
-// });
-
-// (["isElement", "isArray", "isObject", "isFunction", "isBoolean", "isString", "isNumber"]).forEach(function(method) {
-//   test(method + " is defined", function() {
-//     return typeof _[method] === "function" && typeof _()[method] === "function";
-//   });
-// });
-// test("isElement returns true if DOM element, otherwise false", function() {
-//   return _.isElement(document.body) && !_.isElement({});
-// });
-// test("isArray returns true if array, otherwise false", function() {
-//   return _.isArray([]) && !_.isArray({ 0: "a", 1: "b" });
-// });
-// test("isObject returns true if object or function, otherwise false", function() {
-//   return _.isObject({}) && _.isObject([]) && _.isObject(isNaN) && !_.isObject(1);
-// });
-// test("isFunction returns true if function, otherwise false", function() {
-//   return _.isFunction(isNaN) && !_.isFunction({});
-// });
-// test("isBoolean returns true if boolean (primitive or object), otherwise false", function() {
-//   return _.isBoolean(false) && _.isBoolean(new Boolean(false)) && !_.isBoolean(1);
-// });
-// test("isString returns true if string, otherwise false", function() {
-//   return _.isString("") && _.isString(new String()) && !_.isString(1);
-// });
-// test("isNumber returns true if number, (primitive or object), otherwise false", function() {
-//   return _.isNumber(1) && _.isNumber(new Number(5)) && !_.isNumber("5");
-// });
+console.log(`todoList.all().length = ${todoList.all().length}`);

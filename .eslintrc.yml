@@ -38,6 +38,7 @@ rules:
   consistent-return: error
   constructor-super: error
   eqeqeq: error
+  func-names: 0
   id-length:
     - error
     - exceptions:
@@ -49,7 +50,7 @@ rules:
       - z
       min: 2
       properties: never
-  import/extensions: ignorePackages
+  import/extensions: 0
   indent:
     - error
     - 2
