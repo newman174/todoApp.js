@@ -22,23 +22,31 @@ function test(message, assertion) {
   $msg.setAttribute("class", passed ? "pass" : "fail");
 }
 
-test("todo is defined", function () {
-  return typeof todo !== 'undefined';
-});
+console.table(window.app)
 
-test("todoManager is defined", function () {
-  return typeof todoManager !== 'undefined';
-});
+// const Todo = window.app.Todo;
 
-test("todoList is defined", function () {
-  return typeof todoList !== 'undefined';
-});
+// test("Todo is defined", function () {
+//   console.log(typeof window.app.Todo)
+//   return typeof window.app.Todo !== 'undefined';
+// });
+
+// test("todoManager is defined", function () {
+//   return typeof window.todoManager !== 'undefined';
+// });
+
+// test("todoList is defined", function () {
+//   return typeof todoList !== 'undefined';
+// });
 
 // test("todo object only has required properties", function () {
-//   const myTodo = Object.create(todo).init(todoData1);
-//   const desiredProperties = [ 'id', 'title', 'completed', 'month', 'year', 'description' ];
-//   const actualProperties = Object.keys(myTodo);
-//   return true;
+//   const myTodo = new Todo(todoData1);
+//   const desiredProperties = [ 'id', 'title', 'completed', 'month', 'year', 'description' ].sort();
+//   const actualProperties = Object.keys(myTodo).sort();
+//   console.log(JSON.stringify(desiredProperties));
+//   console.log(JSON.stringify(actualProperties));
+
+//   return JSON.stringify(desiredProperties) === JSON.stringify(actualProperties);
 // });
 
 // console.table(todo)
