@@ -1,31 +1,18 @@
 'use strict';
 
-// === Helper Functions =======================================================
+// === Setup ==================================================================
 var $ol = document.querySelector("ol");
 
-const heading = function (heading) {
-  var $h2 = document.createElement("h2");
-  $h2.innerText = heading;
-  $ol.appendChild($h2);
-  return $h2;
-}
+const { Todo, todoList, todoManager, todoSet } = window.todoApp;
+const todoData1 = todoSet[0];
+const todoData2 = todoSet[1];
 
+// === Helper Functions =======================================================
 const outputResult = function (message) {
   var $li = document.createElement("li");
   $li.innerText = message;
   $ol.appendChild($li);
   return $li;
-}
-
-const assertSimilar = function (obj1, obj2) {
-  const comparable = function (obj) {
-    if (typeof obj === 'object' && !Array.isArray(obj)) {
-      obj = Object.entries(obj);
-    }
-    return JSON.stringify(obj.sort());
-  }
-
-  return comparable(obj1) === comparable(obj2);
 }
 
 const test = function (message, assertion) {
@@ -37,10 +24,27 @@ const test = function (message, assertion) {
   }
   catch (e) {
     passed = false;
-    // throw Error(e);
     console.error(e);
   }
   $msg.setAttribute("class", passed ? "pass" : "fail");
+}
+
+const heading = function (heading) {
+  var $h2 = document.createElement("h2");
+  $h2.innerText = heading;
+  $ol.appendChild($h2);
+  return $h2;
+}
+
+const assertSimilar = function (obj1, obj2) {
+  const comparable = function (obj) {
+    if (typeof obj === 'object' && !Array.isArray(obj)) {
+      obj = Object.entries(obj);
+    }
+    return JSON.stringify(obj.sort());
+  }
+
+  return comparable(obj1) === comparable(obj2);
 }
 
 // === Helper Tests ===========================================================
@@ -64,11 +68,6 @@ test('assertSimilar works on non-array objects', function () {
          (assertSimilar({foo: 'bar', baz: 'qux'}, {baz: 'meow', foo: 'bar'}) === false);
 });
 
-// === Setup ==================================================================
-const { Todo, todoList, todoManager, todoSet } = window.app;
-const todoData1 = todoSet[0];
-const todoData2 = todoSet[1];
-
 // === Todo Tests =============================================================
 heading('Todo Tests');
 
@@ -81,7 +80,7 @@ test("todo objects have unique id's", function () {
   const myTodo1 = new Todo(todoData1);
   const myTodo2 = new Todo(todoData2);
 
-  return myTodo1.id && myTodo2.id && myTodo1.id !== myTodo2.id;
+  return myTodo1.id && myTodo2.id && (myTodo1.id !== myTodo2.id);
 });
 
 test("A todo object only has the desired properties", function () {
@@ -121,6 +120,15 @@ heading('todoList Tests');
 test("todoList object is defined", function () {
   return typeof todoList === 'object';
 });
+
+test("todoList maintains a collection of todo objects", function () {
+  return Array.isArray(todoList.filter());
+});
+
+test("todoList can add a todo to the collection", function () {
+  const myTodo = new Todo(myTodoData);
+
+})
 
 // === todoManager Tests ======================================================
 heading('todoManager Tests');

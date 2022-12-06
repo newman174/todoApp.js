@@ -34,32 +34,32 @@
     month: '1',
     year: '2017',
     description: 'Milk for baby',
-  };
+  }.freeze();
   const todoData2 = {
     title: 'Buy Apples',
     month: '',
     year: '2017',
     description: 'An apple a day keeps the doctor away',
-  };
+  }.freeze();
   const todoData3 = {
     title: 'Buy chocolate',
     month: '1',
     year: '',
     description: 'For the cheat day',
-  };
+  }.freeze();
   const todoData4 = {
     title: 'Buy Veggies',
     month: '',
     year: '',
     description: 'For the daily fiber needs',
-  };
+  }.freeze();
   const todoData5 = {
     title: 'Buy cat food',
     month: '2',
     year: '2017',
     description: 'For the daily fiber needs',
-  };
-  const todoSet = [todoData1, todoData2, todoData3, todoData4, todoData5];
+  }.freeze();
+  const todoSet = [todoData1, todoData2, todoData3, todoData4, todoData5].freeze();
 
   // Todo constructor
   class Todo {
@@ -78,41 +78,55 @@
   const todoList = (function () {
     const items = [];
 
+    const getOriginalById = function (id) {
+      return items.find((item) => item.id === id); // maybe add error handling
+    }
+
     return {
       add(...todoData) {
         todoData.forEach((datum) => {
           items.push(new Todo(datum));
-        }, this);
+        });
         return items.at(-1).id;
       },
 
       delete(id) {
-        const item = this.getItem(id);
-        const index = items.indexOf(item);
+        const target = getOriginalById(id);
+        const index = items.indexOf(target);
         return items.splice(index, 1);
       },
 
-      getItem(id) {
-        return items.find((item) => item.id === id);
-      },
-
-      getItems(callback) {
+      filter(callback) {
         let itemsCopy = helpers.deepCopy(items)
+
         itemsCopy.forEach((item) => {
           item.isWithinMonthYear = Todo.prototype.isWithinMonthYear;
-        })
+        });
+
         if (callback === undefined) return itemsCopy;
 
         return itemsCopy.filter(callback);
       },
 
-      // getItems(callback) {
-      //   return helpers.deepCopy(items)
-      // },
+      find(callback) {
+        return this.filter().find(callback);
+      },
 
-      updateItem(item, newData) {
-        Object.assign(item, newData);
-        return item;
+      findById(id) {
+        return this.find((item) => item.id === id);
+      },
+
+      updateItem(id, newDataObj) {
+        const item = getOriginalById(id);
+        if (item === -1) return;   // maybe make more sophisticated with try catch throw
+
+        // Object.assign(item, newDataObj);
+
+        ['title', 'month', 'year', 'description'].forEach((key) => {
+          if (newDataObj.hasOwnProperty(key)) item[key] = newDataObj[key];
+        });
+
+        return id;
       },
     }
   })();
@@ -120,27 +134,25 @@
   // todoManager Object
   const todoManager = (function () {
     return {
-      // getItems: todoList.getItems.bind(todoList),
-
-      items(filterCallback) {
-        return todoList.getItems(filterCallback);
+      items(callback) {
+        return todoList.filter(callback);
       },
 
       completed() {
-        return todoList.getItems((item) => item.completed);
+        return this.items((item) => item.completed);
       },
 
       itemsWithinMonthYear(month, year) {
-        return todoList.getItems((item) => item.isWithinMonthYear(month, year));
+        return this.items((item) => item.isWithinMonthYear(month, year));
       },
 
       completedWithinMonthYear(month, year) {
-        return todoList.getItems((item) => item.completed && item.isWithinMonthYear(month, year));
+        return this.items((item) => item.completed && item.isWithinMonthYear(month, year));
       },
     }
   })();
 
-  window.app = {
+  window.todoApp = {
     Todo,
     todoList,
     todoManager,
