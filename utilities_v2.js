@@ -1,7 +1,3 @@
-// import { msg } from './modules/test.js';
-
-// console.log(msg);
-
 (function () {
   const _ = function (argObj) {
     let u = {
@@ -166,3 +162,26 @@
 
   window._ = _;
 })();
+
+// class _ {
+
+
+//   first() {
+//     return argObj.at(0);
+//   };
+//   last() {
+//     return argObj.at(-1);
+//   };
+//   derange() { };
+//   without(...rejects) {
+//     console.log('hi world from without');
+//     return argObj.filter((elem) => !rejects.includes(elem));
+//   };
+//   sample() {
+//     console.log('hi world from sample');
+//   };
+//   lastIndexOf() {
+//     console.log('hi world from lastIndexOf');
+//   };
+//   findWhere() { };
+// }
