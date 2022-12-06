@@ -1,13 +1,34 @@
+'use strict';
+
+// === Helper Functions =======================================================
 var $ol = document.querySelector("ol");
 
-function outputResult(message) {
+const heading = function (heading) {
+  var $h2 = document.createElement("h2");
+  $h2.innerText = heading;
+  $ol.appendChild($h2);
+  return $h2;
+}
+
+const outputResult = function (message) {
   var $li = document.createElement("li");
   $li.innerText = message;
   $ol.appendChild($li);
   return $li;
 }
 
-function test(message, assertion) {
+const assertSimilar = function (obj1, obj2) {
+  const comparable = function (obj) {
+    if (typeof obj === 'object' && !Array.isArray(obj)) {
+      obj = Object.entries(obj);
+    }
+    return JSON.stringify(obj.sort());
+  }
+
+  return comparable(obj1) === comparable(obj2);
+}
+
+const test = function (message, assertion) {
   var $msg = outputResult(message),
     passed = false;
 
@@ -22,34 +43,111 @@ function test(message, assertion) {
   $msg.setAttribute("class", passed ? "pass" : "fail");
 }
 
-console.table(window.app)
+// === Helper Tests ===========================================================
+heading('Helper Tests');
 
-// const Todo = window.app.Todo;
+test('test formats properly on pass', function () {
+  return true;
+});
 
-// test("Todo is defined", function () {
-//   console.log(typeof window.app.Todo)
-//   return typeof window.app.Todo !== 'undefined';
-// });
+test('test formats properly on fail (*should display as red/fail*)', function () {
+  return false;
+});
 
-// test("todoManager is defined", function () {
-//   return typeof window.todoManager !== 'undefined';
-// });
+test('assertSimilar works on arrays', function () {
+  return (assertSimilar(['a', 'b'], ['b', 'a']) === true) &&
+         (assertSimilar(['a', 'c'], ['b', 'a']) === false);
+});
 
-// test("todoList is defined", function () {
-//   return typeof todoList !== 'undefined';
-// });
+test('assertSimilar works on non-array objects', function () {
+  return (assertSimilar({foo: 'bar', baz: 'qux'}, {baz: 'qux', foo: 'bar'}) === true) &&
+         (assertSimilar({foo: 'bar', baz: 'qux'}, {baz: 'meow', foo: 'bar'}) === false);
+});
 
-// test("todo object only has required properties", function () {
-//   const myTodo = new Todo(todoData1);
-//   const desiredProperties = [ 'id', 'title', 'completed', 'month', 'year', 'description' ].sort();
-//   const actualProperties = Object.keys(myTodo).sort();
-//   console.log(JSON.stringify(desiredProperties));
-//   console.log(JSON.stringify(actualProperties));
+// === Setup ==================================================================
+const { Todo, todoList, todoManager, todoSet } = window.app;
+const todoData1 = todoSet[0];
+const todoData2 = todoSet[1];
 
-//   return JSON.stringify(desiredProperties) === JSON.stringify(actualProperties);
-// });
+// === Todo Tests =============================================================
+heading('Todo Tests');
 
-// console.table(todo)
+test("Todo constructor is defined", function () {
+  console.log(typeof Todo)
+  return typeof Todo === 'function';
+});
+
+test("todo objects have unique id's", function () {
+  const myTodo1 = new Todo(todoData1);
+  const myTodo2 = new Todo(todoData2);
+
+  return myTodo1.id && myTodo2.id && myTodo1.id !== myTodo2.id;
+});
+
+test("A todo object only has the desired properties", function () {
+  const myTodo = new Todo(todoData1);
+  const expected = [ 'id', 'title', 'completed', 'month', 'year', 'description' ].sort();
+  const actual = Object.keys(myTodo).sort();
+
+  return JSON.stringify(expected) === JSON.stringify(actual);
+});
+
+test("todo objects can delegate to a shared isWithinMonthYear method", function () {
+  const myTodo1 = new Todo(todoData1);
+  const myTodo2 = new Todo(todoData2);
+  return (typeof myTodo1.isWithinMonthYear === 'function') &&
+         (myTodo1 !== myTodo2) &&
+         (myTodo1.isWithinMonthYear === myTodo2.isWithinMonthYear);
+});
+
+test("isWithinMonthYear method functions as expected", function () {
+  const myTodoData = {
+    title: 'Buy cat food',
+    month: '2',
+    year: '2017',
+    description: 'Otherwise he gets hangry',
+  };
+
+  const myTodo = new Todo(myTodoData);
+
+  return myTodo.isWithinMonthYear('2', '2017') === true &&
+         myTodo.isWithinMonthYear('3', '2018') === false &&
+         myTodo.isWithinMonthYear('2', '2018') === false;
+});
+
+// === todoList Tests =========================================================
+heading('todoList Tests');
+
+test("todoList object is defined", function () {
+  return typeof todoList === 'object';
+});
+
+// === todoManager Tests ======================================================
+heading('todoManager Tests');
+
+test("todoManager object is defined", function () {
+  return typeof todoManager === 'object';
+});
+
+test("todoManager can return all todo objects", function () {
+
+});
+
+test("todoManager can return all completed todo objects", function () {
+
+});
+
+test("todoManager can return all todo objects within a given month-year combination", function () {
+
+});
+
+test("todoManager can return all completed todo objects within a given month-year combination", function () {
+
+});
+
+
+
+
 
 
 
