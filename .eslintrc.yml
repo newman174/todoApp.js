@@ -113,6 +113,9 @@ rules:
   no-misleading-character-class: error
   no-mixed-operators: error
   no-multi-assign: error
+  no-multi-spaces:
+    - warn
+    - ignoreEOLComments: true
   no-multi-str: error
   no-multiple-empty-lines: error
   no-nested-ternary: error

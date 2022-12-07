@@ -1,5 +1,6 @@
 // tests.js
 // JS229 - Michael Newman - 12-07-2022
+// v1.1
 
 // ============================================================================
 // === 0. Setup & Helper Functions ============================================
@@ -98,11 +99,25 @@ test('todo objects have unique id properties', () => {
 });
 
 test('A todo object only has the desired properties', () => {
-  const myTodo = new Todo(todoData1);
-  const expected = ['id', 'title', 'completed', 'month', 'year', 'description'].sort();
-  const actual = Object.keys(myTodo).sort();
+  // This input data is missing the 'month' key and has
+  // undesired additional properties.
+  const badData = {
+    title: 'Buy cat food',                 // good
+    description: 'Else he gets hangry',    // good
+    year: 2022,                            // number value instead of string
+    priority: 'high',                      // bad
+    maliciousCode() {                      // very bad
+      console.log(`I am inside ${this}!`);
+      this.foo = 'bar';
+    },
+  };
 
-  return assertSimilar(expected, actual);
+  const myTodo = new Todo(badData);
+  const actualKeys = Object.keys(myTodo).sort();
+
+  const expectedKeys = ['id', 'title', 'completed', 'month', 'year', 'description'].sort();
+
+  return assertSimilar(expectedKeys, actualKeys);
 });
 
 test('todo objects can delegate to a shared isWithinMonthYear method', () => {

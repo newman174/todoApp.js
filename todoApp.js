@@ -1,5 +1,6 @@
 // todoApp.js
 // JS229 - Michael Newman - 12-07-2022
+// v1.1
 
 (function () {
   // Helper Function: Simple/insecure UUID generator - courtesy of StackOverflow
@@ -30,14 +31,16 @@
 
   class Todo {
     constructor(todoData) {
-      Object.assign(this, todoData);
+      ['title', 'month', 'year', 'description'].forEach((key) => {
+        this[key] = todoData.hasOwnProperty(key) ? todoData[key].toString() : '';
+      });
       this.completed = false;
       this.id = helpers.generateUUID();
     }
 
     isWithinMonthYear(month, year) {
       return (Number(this.month) === Number(month))
-             && (Number(this.year) === Number(year));
+          && (Number(this.year) === Number(year));
     }
   }
 
