@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable arrow-body-style */
+
 // tests.js
 
 // === Setup ==================================================================
@@ -271,4 +272,6 @@ test('todoManager can return all completed todo objects within a given month-yea
   return testResult;
 });
 
-console.log(`todoList.all().length = ${todoList.all().length}`);
+test('no leftover testing items in the list', () => {
+  return todoList.all().length === 0;
+});

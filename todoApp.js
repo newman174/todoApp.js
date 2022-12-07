@@ -2,6 +2,7 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable consistent-return */
 /* eslint-disable padded-blocks */
+
 // todoApp.js
 
 (function () {
