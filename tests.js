@@ -1,9 +1,13 @@
+// tests.js
+// JS229 - Michael Newman - 12-06-2022
+
 /* eslint-disable no-param-reassign */
 /* eslint-disable arrow-body-style */
 
-// tests.js
+// ============================================================================
+// === 0. Setup & Helper Functions ============================================
+// ============================================================================
 
-// === Setup ==================================================================
 const $ol = document.querySelector('ol');
 
 const {
@@ -15,7 +19,6 @@ const {
 const todoData1 = todoSet[0];
 const todoData2 = todoSet[1];
 
-// === Helper Functions =======================================================
 const outputResult = function (message) {
   const $li = document.createElement('li');
   $li.innerText = message;
@@ -55,12 +58,15 @@ const assertSimilar = function (obj1, obj2) {
   return comparable(obj1) === comparable(obj2);
 };
 
-// === Helper Tests ===========================================================
-heading('Helper Tests');
+// ============================================================================
+// === 1. Helper Tests ========================================================
+// ============================================================================
 
-test('test formats properly on pass', () => true);
+heading('1. Helper Tests');
 
-test('test formats properly on fail (*should display as red/fail*)', () => false);
+test('test method formats properly on pass', () => true);
+
+test('test method formats properly on fail (*should display as red/fail*)', () => false);
 
 test('assertSimilar works on arrays', () => {
   return (assertSimilar(['a', 'b'], ['b', 'a']) === true)
@@ -72,8 +78,11 @@ test('assertSimilar works on non-array objects', () => {
          && (assertSimilar({ foo: 'bar', baz: 'qux' }, { baz: 'meow', foo: 'bar' }) === false);
 });
 
-// === Todo Tests =============================================================
-heading('Todo Tests');
+// ============================================================================
+// === 2. Todo Constructor Tests ==============================================
+// ============================================================================
+
+heading('2. Todo Constructor Tests');
 
 test('Todo constructor is defined', () => {
   return typeof Todo === 'function';
@@ -117,8 +126,11 @@ test('Todo.prototype.isWithinMonthYear method functions as expected', () => {
          && myTodo.isWithinMonthYear('2', '2018') === false;
 });
 
-// === todoList Tests =========================================================
-heading('todoList Tests');
+// ============================================================================
+// === 3. todoList Object Tests ===============================================
+// ============================================================================
+
+heading('3. todoList Object Tests');
 
 test('todoList object is defined', () => {
   return typeof todoList === 'object';
@@ -175,7 +187,10 @@ test('todoList returns a specified todo based on its id', () => {
   return testResult;
 });
 
-// === todoManager Tests ======================================================
+// ============================================================================
+// === 4. todoManager Object Tests ============================================
+// ============================================================================
+
 heading('todoManager Tests');
 
 test('todoManager object is defined', () => {
@@ -271,6 +286,8 @@ test('todoManager can return all completed todo objects within a given month-yea
 
   return testResult;
 });
+
+// Wrapup
 
 test('no leftover testing items in the list', () => {
   return todoList.all().length === 0;

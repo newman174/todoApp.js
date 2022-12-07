@@ -1,7 +1,8 @@
 // todoApp.js
+// JS229 - Michael Newman - 12-06-2022
 
 (function () {
-  // Helper Function: Simple/insecure UUID generator (courtesy of StackOverflow)
+  // Helper Function: Simple/insecure UUID generator - courtesy of StackOverflow
   const generateUUID = function uuidv4() {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => /* eslint-disable-line */
     /* eslint-disable-next-line */
@@ -18,39 +19,6 @@
       return JSON.parse(JSON.stringify(obj));
     },
   };
-
-  // Sample input data
-  const todoData1 = {
-    title: 'Buy Milk',
-    month: '1',
-    year: '2017',
-    description: 'Milk for baby',
-  };
-  const todoData2 = {
-    title: 'Buy Apples',
-    month: '',
-    year: '2017',
-    description: 'An apple a day keeps the doctor away',
-  };
-  const todoData3 = {
-    title: 'Buy chocolate',
-    month: '1',
-    year: '',
-    description: 'For the cheat day',
-  };
-  const todoData4 = {
-    title: 'Buy Veggies',
-    month: '',
-    year: '',
-    description: 'For the daily fiber needs',
-  };
-  const todoData5 = {
-    title: 'Buy cat food',
-    month: '2',
-    year: '2017',
-    description: 'Otherwise he gets hangry',
-  };
-  const todoSet = [todoData1, todoData2, todoData3, todoData4, todoData5];
 
   // Todo constructor
   class Todo {
@@ -167,6 +135,5 @@
     Todo,
     todoList,
     todoManager,
-    todoSet,
   };
 }());
