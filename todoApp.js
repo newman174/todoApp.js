@@ -139,8 +139,8 @@
           todoList.update(id, {completed: true});
         });
         return ids;
-      }
-    }
+      },
+    };
   })();
 
   // todoManager Object
@@ -165,7 +165,7 @@
       completedWithinMonthYear(month, year) {
         return this.filter((item) => item.completed && item.isWithinMonthYear(month, year));
       },
-    }
+    };
   })();
 
   window.todoApp = {
@@ -173,40 +173,6 @@
     todoList,
     todoManager,
     todoSet,
-  }
+  };
 
-
-  // todoList.add(...todoSet);
-  // const lastTodoId = todoList.add(...todoSet);
-  // console.log(`lastTodoId = ${lastTodoId}`);
-
-  // console.table(todoList.getItems());
-  // console.table(todoManager.items());
-
-  // console.log(todoList.getItems() !== todoList.getItems());
-
-  // console.table(todoList.getItems((item) => item.year === '2017'));
-  // console.table(todoList.getItems((item) => item.month === '1'));
-  // console.log('deleted todo \n |\n\\ /')
-  // console.table(todoList.delete(lastTodoId));
-  // console.table(todoList.getItems());
-
-  // const someItem = todoList.getItems((item) => item.year === '2017')[0];
-  // // console.table(someItem);
-  // console.table(todoList.update(someItem, {year: '2018', completed: true}));
-  // // console.table(someItem);
-  // console.table(todoManager.completed());
-  // console.log(todoManager.completed()[0].completed)
-
-
-  // const someItem = todoList.getItem(todoManager.items((item) => item.year === '2017')[0].id);
-  // todoList.update(someItem, {year: '2018', completed: true});
-  // console.table(todoManager.completed());
-  // console.table(todoManager.items((item) => item.title === 'Buy chocolate'))
-
-  // const someItem = todoList.getItem(todoManager.items((item) => item.title === 'Buy cat food')[0].id);
-  // console.table(someItem);
-  // console.table(todoManager.itemsWithinMonthYear(1, 2017))
-  // todoList.update(someItem, {completed: true});
-  // console.table(todoManager.completedWithinMonthYear(1, 2017));
-})();
+}());
