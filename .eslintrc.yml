@@ -26,6 +26,7 @@ globals:
   Handlebars: true
 rules:
   accessor-pairs: error
+  arrow-body-style: off
   array-callback-return: error
   arrow-spacing: error
   block-scoped-var: error

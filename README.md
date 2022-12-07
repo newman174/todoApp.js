@@ -1,5 +1,7 @@
 # JS229_Assessment_Project
 
+[uuid source](https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid)
+
 - `todoManager`
   - Manages `todoList` objects
   - responsible for returning a set of `todo`s from a `todoList` based on certain criteria.

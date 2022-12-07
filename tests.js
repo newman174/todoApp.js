@@ -79,7 +79,7 @@ test('Todo constructor is defined', () => {
   return typeof Todo === 'function';
 });
 
-test("todo objects have unique id's", () => {
+test('todo objects have unique id properties', () => {
   const myTodo1 = new Todo(todoData1);
   const myTodo2 = new Todo(todoData2);
 
