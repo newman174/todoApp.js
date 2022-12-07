@@ -1,40 +1,31 @@
-# JS229_Assessment_Project
+# JS229 - todoApp.js
 
-[uuid source](https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid)
+Michael Newman - 12-07-2022
 
-- `todoManager`
-  - Manages `todoList` objects
-  - responsible for returning a set of `todo`s from a `todoList` based on certain criteria.
-  - The todoManager interfaces with the `todoList` object. It has methods that query the `todoList` to return all or a subset of the todo objects as an array of todo objects.
-  - The todoManager can query the `todoList` object in the following ways:
-    - Return all `todo` objects
-    - Return all completed `todo` objects
-    - Return all `todo` objects within a given month-year combination
-    - Return all completed `todo` objects within a given month-year combination
+## Quick Start
 
-- `todoList`
-  - collection of `todo` objects
-  - Returns only a copy of the collection
-  - Users cannot manipulate `todo` objects directly
-  - Operations:
-    - Maintains a collection of `todo` objects
-    - Adds a `todo` object to the collection
-    - Deletes a `todo` object from the collection
-    - Initializes the collection with `todo` objects
-    - Updates existing properties of a specific `todo` object
-    - Returns a specified `todo` object based on its id property
+- Open `test_reporting.html` in a browser.
 
-- `todo` object
-  - Constructor: `Todo`
-  - *Only* have these properties:
-    - Properties:
-      - `id` (must be unique)
-      - `title`
-      - `completed`
-      - `month`
-      - `year`
-      - `description`
-    - Shared Methods:
-      - `isWithinMonthYear(month, year)`
+## File Descriptions
 
-- [uuid](https://www.npmjs.com/package/uuid)
+- `todoApp,js`
+  - Main application logic
+- `tests.js`
+  - Test logic and report generation
+- `test_reporting.html`
+  - Dashboard of test results
+- `testData.js`
+  - Input data for the tests
+
+## Dependencies and Compatability
+
+- No external packages.
+- Tested on `Google Chrome Version 107.0.5304.121 (Official Build) (arm64)` and `Safari Version 16.1 (18614.2.9.1.12)`.
+
+## Attribution
+
+- [StackOverflow: Simple UUID Generator](https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid)
+
+## Avenues for Further Development
+
+- Input validation and error handling.

@@ -1,5 +1,5 @@
 // todoApp.js
-// JS229 - Michael Newman - 12-06-2022
+// JS229 - Michael Newman - 12-07-2022
 
 (function () {
   // Helper Function: Simple/insecure UUID generator - courtesy of StackOverflow
@@ -74,22 +74,21 @@
         return deletedIds.length > 1 ? deletedIds : deletedIds[0];
       },
 
-      update(id, newDataObj) {
-        const item = getOriginalById(id);
+      update(targetId, newDataObj) {
+        const item = getOriginalById(targetId);
         if (item === -1) return -1; // maybe make more sophisticated / throw error
 
         ['title', 'month', 'year', 'description', 'completed'].forEach((key) => {
           if (newDataObj.hasOwnProperty(key)) item[key] = newDataObj[key];
         });
-        return id;
+        return targetId;
       },
 
-      markCompleted(...ids) {
-        ids.forEach((id) => {
-          // console.log('mark complete id: ' + id);
-          todoList.update(id, { completed: true });
+      markCompleted(...targetIds) {
+        targetIds.forEach((targetId) => {
+          todoList.update(targetId, { completed: true });
         });
-        return ids;
+        return targetIds;
       },
 
       filter(callback) {
@@ -110,7 +109,7 @@
       },
 
       find(callback) {
-        return this.filter().find(callback);
+        return this.all().find(callback);
       },
 
       findById(id) {
@@ -119,7 +118,10 @@
     };
   }());
 
-  // todoManager Object
+  // ==========================================================================
+  // === 3. todoManager Object ================================================
+  // ==========================================================================
+
   const todoManager = (function () {
     return {
       filter(callback) {

@@ -11,12 +11,11 @@
   "devDependencies": {
     "eslint": "^8.29.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0"
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-cli": "^1.1.1"
   },
   "type": "module",
   "dependencies": {
-    "@babel/eslint-parser": "^7.19.1",
-    "eslint-cli": "^1.1.1",
-    "uuid": "^9.0.0"
+    "@babel/eslint-parser": "^7.19.1"
   }
 }
