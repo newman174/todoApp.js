@@ -49,7 +49,7 @@
     const collection = [];
 
     const getOriginalById = function (id) {
-      // maybe add error handling / input validation
+      // maybe add error handling / input validation here
       return collection.find((item) => item.id === id);
     };
 
@@ -79,8 +79,11 @@
         if (item === -1) return -1; // maybe make more sophisticated / throw error
 
         ['title', 'month', 'year', 'description', 'completed'].forEach((key) => {
-          if (newDataObj.hasOwnProperty(key)) item[key] = newDataObj[key];
+          if (newDataObj.hasOwnProperty(key)) {
+            item[key] = newDataObj[key];
+          }
         });
+
         return targetId;
       },
 
@@ -88,7 +91,8 @@
         targetIds.forEach((targetId) => {
           todoList.update(targetId, { completed: true });
         });
-        return targetIds;
+
+        return targetIds.length > 1 ? targetIds : targetIds[0];
       },
 
       filter(callback) {
@@ -122,31 +126,29 @@
   // === 3. todoManager Object ================================================
   // ==========================================================================
 
-  const todoManager = (function () {
-    return {
-      filter(callback) {
-        return todoList.filter(callback);
-      },
+  const todoManager = {
+    filter(callback) {
+      return todoList.filter(callback);
+    },
 
-      all() {
-        return this.filter();
-      },
+    all() {
+      return this.filter();
+    },
 
-      completed() {
-        return this.filter((item) => item.completed);
-      },
+    completed() {
+      return this.filter((item) => item.completed);
+    },
 
-      itemsWithinMonthYear(month, year) {
-        return this.filter((item) => item.isWithinMonthYear(month, year));
-      },
+    itemsWithinMonthYear(month, year) {
+      return this.filter((item) => item.isWithinMonthYear(month, year));
+    },
 
-      completedWithinMonthYear(month, year) {
-        return this.filter((item) => {
-          return item.completed && item.isWithinMonthYear(month, year);
-        });
-      },
-    };
-  }());
+    completedWithinMonthYear(month, year) {
+      return this.filter((item) => {
+        return item.completed && item.isWithinMonthYear(month, year);
+      });
+    },
+  };
 
   window.todoApp = {
     Todo,

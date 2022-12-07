@@ -1,26 +1,28 @@
-# JS229 - todoApp.js
+# JS229 - *todoApp.js*
 
 Michael Newman - 12-07-2022
 
 ## Quick Start
 
-- Open `test_reporting.html` in a browser.
+- Open `test_reporting.html` in a browser window.
 
 ## File Descriptions
 
-- `todoApp,js`
-  - Main application logic
+- `todoApp.js`
+  - Main application library
 - `tests.js`
   - Test logic and report generation
-- `test_reporting.html`
-  - Dashboard of test results
 - `testData.js`
   - Input data for the tests
+- `test_reporting.html`
+  - Dashboard of test results
 
-## Dependencies and Compatability
+## Dependencies and Compatibility
 
-- No external packages.
-- Tested on `Google Chrome Version 107.0.5304.121 (Official Build) (arm64)` and `Safari Version 16.1 (18614.2.9.1.12)`.
+- No external packages required.
+- Tested on:
+  - `Google Chrome Version 107.0.5304.121 (Official Build) (arm64)`
+  - `Safari Version 16.1 (18614.2.9.1.12)`.
 
 ## Attribution
 

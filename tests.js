@@ -282,7 +282,7 @@ test('todoManager can return all completed todo objects within a given month-yea
   return testResult;
 });
 
-// Wrapup
+// Teardown test
 
 test('No leftover testing items in the list', () => {
   return todoList.all().length === 0;
