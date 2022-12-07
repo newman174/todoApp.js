@@ -10,6 +10,10 @@
     ); /* eslint-disable-line */
   };
 
+  // ==========================================================================
+  // === 0. helpers Object ====================================================
+  // ==========================================================================
+
   const helpers = {
     // Helper Function: generateUUID
     generateUUID,
@@ -20,7 +24,10 @@
     },
   };
 
-  // Todo constructor
+  // ==========================================================================
+  // === 1. Todo constructor ==================================================
+  // ==========================================================================
+
   class Todo {
     constructor(todoData) {
       Object.assign(this, todoData);
@@ -34,34 +41,59 @@
     }
   }
 
-  // todoList Object
+  // ==========================================================================
+  // === 2. todoList Object ===================================================
+  // ==========================================================================
+
   const todoList = (function () {
-    const items = [];
+    const collection = [];
 
     const getOriginalById = function (id) {
-      return items.find((item) => item.id === id); // maybe add error handling
+      // maybe add error handling / input validation
+      return collection.find((item) => item.id === id);
     };
 
     return {
-      add(...todoData) {
-        todoData.forEach((datum) => {
-          items.push(new Todo(datum));
+      add(...inputData) {
+        const newIds = inputData.map((datum) => {
+          const todo = new Todo(datum);
+          collection.push(todo);
+          return todo.id;
         });
-        return items.at(-1).id;
+        return newIds.length > 1 ? newIds : newIds[0];
       },
 
-      delete(...ids) {
-        ids.forEach((id) => {
+      delete(...inputIds) {
+        const deletedIds = inputIds.map((id) => {
           const target = getOriginalById(id);
-          const index = items.indexOf(target);
-          items.splice(index, 1);
+          const index = collection.indexOf(target);
+          collection.splice(index, 1);
+          return id;
         });
 
-        return ids.length;
+        return deletedIds.length > 1 ? deletedIds : deletedIds[0];
+      },
+
+      update(id, newDataObj) {
+        const item = getOriginalById(id);
+        if (item === -1) return -1; // maybe make more sophisticated / throw error
+
+        ['title', 'month', 'year', 'description', 'completed'].forEach((key) => {
+          if (newDataObj.hasOwnProperty(key)) item[key] = newDataObj[key];
+        });
+        return id;
+      },
+
+      markCompleted(...ids) {
+        ids.forEach((id) => {
+          // console.log('mark complete id: ' + id);
+          todoList.update(id, { completed: true });
+        });
+        return ids;
       },
 
       filter(callback) {
-        const itemsCopy = helpers.deepCopy(items);
+        const itemsCopy = helpers.deepCopy(collection);
 
         itemsCopy.forEach((item) => {
           // eslint-disable-next-line no-param-reassign
@@ -83,23 +115,6 @@
 
       findById(id) {
         return this.find((item) => item.id === id);
-      },
-
-      update(id, newDataObj) {
-        const item = getOriginalById(id);
-        if (item === -1) return; // maybe make more sophisticated with try catch throw
-
-        ['title', 'month', 'year', 'description', 'completed'].forEach((key) => {
-          if (newDataObj.hasOwnProperty(key)) item[key] = newDataObj[key];
-        });
-      },
-
-      markCompleted(...ids) {
-        ids.forEach((id) => {
-          // console.log('mark complete id: ' + id);
-          todoList.update(id, { completed: true });
-        });
-        return ids;
       },
     };
   }());
