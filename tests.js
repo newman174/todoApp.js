@@ -222,13 +222,7 @@ test('todoManager returned array is a deep copy of the collection', () => {
 });
 
 test('todoManager can return all todo objects', () => {
-  // const newIds = todoSet.map((todoData) => {
-  //   return todoList.add(todoData);
-  // });
-  const newIds = todoSet.map((todoData) => {
-    return todoList.add(todoData);
-  });
-
+  const newIds = todoList.add(...todoSet);
   const testResult = (todoManager.all().length === todoSet.length);
 
   todoList.delete(...newIds);
@@ -258,11 +252,10 @@ test('todoManager can return all todo objects within a given month-year combinat
     description: 'Otherwise he gets hangry',
   };
 
-  const targetId = todoList.add(myTodoData);
-  const otherId = todoList.add(todoData1);
+  const [targetId, otherId] = todoList.add(myTodoData, todoData1);
 
   const testResult = (todoManager.itemsWithinMonthYear('2', '2017').length === 1)
-                     && (todoManager.itemsWithinMonthYear('2', '2017')[0].id === targetId);
+                  && (todoManager.itemsWithinMonthYear('2', '2017')[0].id === targetId);
 
   todoList.delete(targetId, otherId);
 
@@ -277,13 +270,12 @@ test('todoManager can return all completed todo objects within a given month-yea
     description: 'Otherwise he gets hangry',
   };
 
-  const targetId = todoList.add(myTodoData);
-  const otherId = todoList.add(todoData1);
+  const [targetId, otherId] = todoList.add(myTodoData, todoData1);
 
   todoList.markCompleted(targetId, otherId);
 
   const testResult = (todoManager.itemsWithinMonthYear('2', '2017').length === 1)
-                     && (todoManager.itemsWithinMonthYear('2', '2017')[0].id === targetId);
+                  && (todoManager.itemsWithinMonthYear('2', '2017')[0].id === targetId);
 
   todoList.delete(targetId, otherId);
 
