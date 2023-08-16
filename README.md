@@ -1,4 +1,4 @@
-# JS229 - *todoApp.js*
+# todoApp.js
 
 Michael Newman - 12-07-2022
 
